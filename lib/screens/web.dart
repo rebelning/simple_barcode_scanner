@@ -55,16 +55,16 @@ class BarcodeScanner extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = width / (16 / 9);
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(appBarTitle ?? kScanPageTitle),
-      //   centerTitle: centerTitle,
-      // ),
+      appBar: AppBar(
+        title: Text(appBarTitle ?? kScanPageTitle),
+        centerTitle: centerTitle,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height: 600,
-              width: 600,
+              height: height,
+              width: width,
               child: HtmlElementView(
                 viewType: createdViewId,
               ),
