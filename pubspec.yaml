@@ -18,15 +18,15 @@ dependencies:
   flutter:
     sdk: flutter
   # Flutter window webview
-  webview_windows: ^0.3.0
-  # Barcode scanner for android and ios
-  flutter_barcode_scanner: ^2.0.0
+  webview_windows: ^0.4.0
+  # # Barcode scanner for android and ios
+  # flutter_barcode_scanner: ^2.0.0
   #Get assets path for window platform
   path: ^1.8.3
   #checking permissions
   permission_handler: ^11.3.0
   #Add new web package
-  web: ^0.5.0
+  web: ^0.4.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
