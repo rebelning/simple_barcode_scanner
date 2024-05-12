@@ -8,7 +8,7 @@ import 'package:simple_barcode_scanner/constant.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:webview_windows/webview_windows.dart';
 
-class WindowBarcodeScanner extends StatelessWidget {
+class WindowBarcodeScanner extends StatefulWidget {
   final String lineColor;
   final String cancelButtonText;
   final bool isShowFlashIcon;
@@ -18,7 +18,7 @@ class WindowBarcodeScanner extends StatelessWidget {
   final bool? centerTitle;
 
   const WindowBarcodeScanner({
-    super.key,
+    Key? key,
     required this.lineColor,
     required this.cancelButtonText,
     required this.isShowFlashIcon,
@@ -26,31 +26,66 @@ class WindowBarcodeScanner extends StatelessWidget {
     required this.onScanned,
     this.appBarTitle,
     this.centerTitle,
-  });
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _WindowBarcodeScannerState();
+}
+
+class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
+  String? lineColor;
+  String? cancelButtonText;
+  bool? isShowFlashIcon;
+  ScanType? scanType;
+  Function(String)? onScanned;
+  String? appBarTitle;
+  bool? centerTitle;
+  WebviewController controller = WebviewController();
+  bool isPermissionGranted = false;
+  @override
+  void initState() {
+    super.initState();
+    lineColor = widget.lineColor;
+    cancelButtonText = widget.cancelButtonText;
+    isShowFlashIcon = widget.isShowFlashIcon;
+    scanType = widget.scanType;
+    onScanned = widget.onScanned;
+    appBarTitle = widget.appBarTitle;
+    centerTitle = widget.centerTitle;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _dealloc();
+  }
+
+  void _dealloc() async {
+    await controller.postWebMessage(json.encode({"event": "close"}));
+    await controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    WebviewController controller = WebviewController();
-    bool isPermissionGranted = false;
-
     _checkCameraPermission().then((granted) {
       debugPrint("Permission is $granted");
       isPermissionGranted = granted;
     });
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(appBarTitle ?? kScanPageTitle),
-      //   centerTitle: centerTitle,
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       /// send close event to web-view
-      //       controller.postWebMessage(json.encode({"event": "close"}));
-      //       Navigator.pop(context);
-      //     },
-      //     icon: const Icon(Icons.arrow_back_ios),
-      //   ),
-      // ),
+      appBar: AppBar(
+        title: Text(appBarTitle ?? ""),
+        centerTitle: centerTitle,
+        backgroundColor: const Color(0xff2c83f5),
+        leading: IconButton(
+          onPressed: () {
+            /// send close event to web-view
+            controller.postWebMessage(json.encode({"event": "close"}));
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.close_rounded),
+        ),
+      ),
       body: FutureBuilder<bool>(
           future: initPlatformState(
             controller: controller,
@@ -146,7 +181,7 @@ class WindowBarcodeScanner extends StatelessWidget {
               event['data'].isNotEmpty &&
               barcodeNumber == null) {
             barcodeNumber = event['data'];
-            onScanned(barcodeNumber!);
+            if (onScanned != null) onScanned!(barcodeNumber!);
           }
         }
       });
