@@ -75,7 +75,14 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarTitle ?? ""),
+        title: Text(
+          appBarTitle ?? "",
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            height: 1.2,
+          ),
+        ),
         centerTitle: centerTitle,
         backgroundColor: const Color(0xff2c83f5),
         leading: IconButton(
