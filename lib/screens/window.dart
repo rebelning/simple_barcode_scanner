@@ -61,7 +61,7 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
     super.dispose();
   }
 
-  void _dealloc() async {
+  Future _dealloc() async {
     await controller.postWebMessage(json.encode({"event": "close"}));
     await controller.dispose();
   }
@@ -185,7 +185,11 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
               event['data'].isNotEmpty &&
               barcodeNumber == null) {
             barcodeNumber = event['data'];
-            if (onScanned != null) onScanned!(barcodeNumber!);
+            if (onScanned != null) {
+              onScanned!(barcodeNumber!);
+              _dealloc();
+              Navigator.pop(context);
+            }
           }
         }
       });
