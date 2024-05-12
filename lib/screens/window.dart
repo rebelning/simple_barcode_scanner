@@ -56,8 +56,9 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
 
   @override
   void dispose() {
-    super.dispose();
+    debugPrint("WindowBarcodeScanner dispose...");
     _dealloc();
+    super.dispose();
   }
 
   void _dealloc() async {
@@ -83,7 +84,10 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
             controller.postWebMessage(json.encode({"event": "close"}));
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.close_rounded),
+          icon: const Icon(
+            Icons.close_rounded,
+            color: Colors.white,
+          ),
         ),
       ),
       body: FutureBuilder<bool>(
